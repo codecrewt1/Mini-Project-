@@ -14,6 +14,10 @@
             Console.WriteLine("I study Computer Science");
             Console.WriteLine("I build projects");
             Console.WriteLine("Thank you");
+            Console.WriteLine("Thank you");
+            Console.WriteLine("Thank you");
+            Console.WriteLine("Thank you");
+
 
 
         }
