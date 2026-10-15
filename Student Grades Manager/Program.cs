@@ -11,7 +11,7 @@
         }
         public override string ToString()
         {
-           return "Welcome to CodeCrewT1! Let's code and grow together 🚀";
+           return "Welcome to CodeCrewT1! Let's code and grow together ";
            
         }
     }
