@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace Student_Grades_Manager
 {
+
     public class StudentManager
     {
+
         private List<Student> students = new List<Student>();
         private InputValidator validator = new InputValidator();
 
@@ -53,11 +55,13 @@ namespace Student_Grades_Manager
             {
                 Console.Write($"Enter grade {i + 1} (0-100): ");
                 string? gradeInput = Console.ReadLine();
+
                 if (!int.TryParse(gradeInput, out int grade) || grade < 0 || grade > 100)
                 {
                     Console.WriteLine("Invalid Grade: Must be a number between 0 and 100. Student not added.");
                     return;
                 }
+
                 grades[i] = grade;
             }
 
@@ -98,5 +102,6 @@ namespace Student_Grades_Manager
 
             return null;
         }
+
     }
 }
