@@ -1,5 +1,4 @@
 using System;
-using Student_Grades_Manager;
 
 namespace Student_Grades_Manager
 {
@@ -10,7 +9,6 @@ namespace Student_Grades_Manager
             StudentManager manager = new StudentManager();
             GradeCalculator calculator = new GradeCalculator();
             StudentReport report = new StudentReport();
-
             bool running = true;
 
             Console.WriteLine("========================================");
@@ -46,72 +44,11 @@ namespace Student_Grades_Manager
                         break;
 
                     case "3":
-                        Console.WriteLine();
-                        Console.WriteLine("--- Search Student ---");
-                        Console.Write("Enter Student ID to search: ");
-                        string? searchInput = Console.ReadLine();
-
-                        if (int.TryParse(searchInput, out int searchId))
-                        {
-                            Student? found = manager.SearchStudentById(searchId);
-                            if (found != null)
-                            {
-                                Console.WriteLine($"Student Found!");
-                                Console.WriteLine($"  ID:     {found.ID}");
-                                Console.WriteLine($"  Name:   {found.Name}");
-                                Console.WriteLine($"  Age:    {found.Age}");
-                                Console.WriteLine($"  Grades: {string.Join(", ", found.Grades)}");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Student not found.");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input. Please enter a valid numeric ID.");
-                        }
+                        SearchStudent(manager);
                         break;
 
                     case "4":
-                        Console.WriteLine();
-                        Console.WriteLine("--- Student Report ---");
-                        Console.Write("Enter Student ID for report: ");
-                        string? reportInput = Console.ReadLine();
-
-                        if (int.TryParse(reportInput, out int reportId))
-                        {
-                            Student? student = manager.SearchStudentById(reportId);
-                            if (student != null)
-                            {
-                                double average = calculator.CalculateAverage(student.Grades);
-                                int highest = calculator.GetHighestGrade(student.Grades);
-                                int lowest = calculator.GetLowestGrade(student.Grades);
-                                string status = report.GetStudentStatus(average);
-
-                                Console.WriteLine("========================================");
-                                Console.WriteLine("          STUDENT REPORT");
-                                Console.WriteLine("========================================");
-                                Console.WriteLine($"  ID:             {student.ID}");
-                                Console.WriteLine($"  Name:           {student.Name}");
-                                Console.WriteLine($"  Age:            {student.Age}");
-                                Console.WriteLine($"  Grades:         {string.Join(", ", student.Grades)}");
-                                Console.WriteLine("----------------------------------------");
-                                Console.WriteLine($"  Average:        {average:F2}");
-                                Console.WriteLine($"  Highest Grade:  {highest}");
-                                Console.WriteLine($"  Lowest Grade:   {lowest}");
-                                Console.WriteLine($"  Status:         {status}");
-                                Console.WriteLine("========================================");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Student not found.");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input. Please enter a valid numeric ID.");
-                        }
+                        GenerateStudentReport(manager, calculator, report);
                         break;
 
                     case "5":
@@ -125,6 +62,72 @@ namespace Student_Grades_Manager
                         Console.WriteLine("Invalid option. Please choose between 1 and 5.");
                         break;
                 }
+            }
+        }
+
+        private static void SearchStudent(StudentManager manager)
+        {
+            Console.WriteLine();
+            Console.WriteLine("--- Search Student ---");
+            Console.Write("Enter Student ID to search: ");
+            string searchInput = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(searchInput, out int searchId) || searchId <= 0)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid numeric ID.");
+                return;
+            }
+
+            Student? found = manager.SearchStudentById(searchId);
+            if (found != null)
+            {
+                Console.WriteLine("Student Found!");
+                manager.DisplayStudentDetails(found);
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
+            }
+        }
+
+        private static void GenerateStudentReport(StudentManager manager, GradeCalculator calculator, StudentReport report)
+        {
+            Console.WriteLine();
+            Console.WriteLine("--- Student Report ---");
+            Console.Write("Enter Student ID for report: ");
+            string reportInput = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(reportInput, out int reportId) || reportId <= 0)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid numeric ID.");
+                return;
+            }
+
+            Student? student = manager.SearchStudentById(reportId);
+            if (student != null)
+            {
+                double average = calculator.CalculateAverage(student.Grades);
+                int highest = calculator.GetHighestGrade(student.Grades);
+                int lowest = calculator.GetLowestGrade(student.Grades);
+                string status = report.GetStudentStatus(average);
+
+                Console.WriteLine("========================================");
+                Console.WriteLine("          STUDENT REPORT");
+                Console.WriteLine("========================================");
+                Console.WriteLine($"  ID:             {student.ID}");
+                Console.WriteLine($"  Name:           {student.Name}");
+                Console.WriteLine($"  Age:            {student.Age}");
+                Console.WriteLine($"  Grades:         {string.Join(", ", student.Grades)}");
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"  Average:        {average:F2}");
+                Console.WriteLine($"  Highest Grade:  {highest}");
+                Console.WriteLine($"  Lowest Grade:   {lowest}");
+                Console.WriteLine($"  Status:         {status}");
+                Console.WriteLine("========================================");
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
             }
         }
     }

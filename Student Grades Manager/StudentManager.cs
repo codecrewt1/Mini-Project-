@@ -3,18 +3,17 @@ using System.Collections.Generic;
 
 namespace Student_Grades_Manager
 {
-
     public class StudentManager
     {
-
-        private List<Student> students = new List<Student>();
-        private InputValidator validator = new InputValidator();
+        private readonly List<Student> students = new List<Student>();
+        private readonly InputValidator validator = new InputValidator();
 
         public void AddStudent()
         {
             Console.Write("Enter Student ID: ");
-            string? idInput = Console.ReadLine();
-            if (!int.TryParse(idInput, out int id) || id <= 0)
+            string idInput = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(idInput, out int id) || !validator.IsValidId(id))
             {
                 Console.WriteLine("Invalid ID: Please enter a valid positive number.");
                 return;
@@ -27,24 +26,27 @@ namespace Student_Grades_Manager
             }
 
             Console.Write("Enter Student Name: ");
-            string? name = Console.ReadLine();
-            if (!validator.IsValidName(name!))
+            string name = Console.ReadLine() ?? string.Empty;
+
+            if (!validator.IsValidName(name))
             {
                 Console.WriteLine("Invalid Name: Name cannot be empty.");
                 return;
             }
 
             Console.Write("Enter Student Age: ");
-            string? ageInput = Console.ReadLine();
-            if (!int.TryParse(ageInput, out int age) || age <= 0 || age > 120)
+            string ageInput = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(ageInput, out int age) || !validator.IsValidAge(age))
             {
-                Console.WriteLine("Invalid Age: Age must be between 1 and 120.");
+                Console.WriteLine("Invalid Age: Age must be between 5 and 60.");
                 return;
             }
 
             Console.Write("Enter number of grades (1-7): ");
-            string? countInput = Console.ReadLine();
-            if (!int.TryParse(countInput, out int count) || count <= 0 || count > 7)
+            string countInput = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(countInput, out int count) || !validator.IsValidGradeCount(count))
             {
                 Console.WriteLine("Invalid input: Number of grades must be between 1 and 7.");
                 return;
@@ -54,9 +56,9 @@ namespace Student_Grades_Manager
             for (int i = 0; i < count; i++)
             {
                 Console.Write($"Enter grade {i + 1} (0-100): ");
-                string? gradeInput = Console.ReadLine();
+                string gradeInput = Console.ReadLine() ?? string.Empty;
 
-                if (!int.TryParse(gradeInput, out int grade) || grade < 0 || grade > 100)
+                if (!int.TryParse(gradeInput, out int grade) || !validator.IsValidGrade(grade))
                 {
                     Console.WriteLine("Invalid Grade: Must be a number between 0 and 100. Student not added.");
                     return;
@@ -65,7 +67,7 @@ namespace Student_Grades_Manager
                 grades[i] = grade;
             }
 
-            Student student = new Student(id, name!, age, grades);
+            Student student = new Student(id, name, age, grades);
             students.Add(student);
 
             Console.WriteLine("Student added successfully!");
@@ -82,12 +84,22 @@ namespace Student_Grades_Manager
             Console.WriteLine();
             foreach (Student student in students)
             {
-                Console.WriteLine($"  ID:     {student.ID}");
-                Console.WriteLine($"  Name:   {student.Name}");
-                Console.WriteLine($"  Age:    {student.Age}");
-                Console.WriteLine($"  Grades: {string.Join(", ", student.Grades)}");
+                DisplayStudentDetails(student);
                 Console.WriteLine("  ----------------------------------------");
             }
+        }
+
+        public void DisplayStudentDetails(Student student)
+        {
+            if (student == null)
+            {
+                return;
+            }
+
+            Console.WriteLine($"  ID:     {student.ID}");
+            Console.WriteLine($"  Name:   {student.Name}");
+            Console.WriteLine($"  Age:    {student.Age}");
+            Console.WriteLine($"  Grades: {string.Join(", ", student.Grades)}");
         }
 
         public Student? SearchStudentById(int id)
@@ -102,6 +114,5 @@ namespace Student_Grades_Manager
 
             return null;
         }
-
     }
 }

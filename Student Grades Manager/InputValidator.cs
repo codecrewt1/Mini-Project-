@@ -1,46 +1,51 @@
 using System;
 using System.Collections.Generic;
 
-public class InputValidator
+namespace Student_Grades_Manager
 {
-    public bool IsValidName(string name)
+    public class InputValidator
     {
-        return !string.IsNullOrWhiteSpace(name);
-    }
-
-    public bool AreValidGrades(int[] grades)
-    {
-        if (grades == null || grades.Length == 0)
+        public bool IsValidId(int id)
         {
-            return false;
+            return id > 0;
         }
 
-        foreach (int grade in grades)
+        public bool IsValidName(string? name)
         {
-            if (grade < 0 || grade > 100)
+            return !string.IsNullOrWhiteSpace(name);
+        }
+
+        public bool IsValidAge(int age)
+        {
+            return age >= 5 && age <= 60;
+        }
+
+        public bool IsValidGradeCount(int count)
+        {
+            return count >= 1 && count <= 7;
+        }
+
+        public bool IsValidGrade(int grade)
+        {
+            return grade >= 0 && grade <= 100;
+        }
+
+        public bool IsUniqueId(int id, List<Student> students)
+        {
+            if (students == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(students));
             }
-        }
 
-        return true;
-    }
+            foreach (Student student in students)
+            {
+                if (student.ID == id)
+                {
+                    return false;
+                }
+            }
 
-    public bool IsUniqueId(int id, List<Student> students)
-    {
-        if (students == null)
-        {
             return true;
         }
-
-        foreach (Student student in students)
-        {
-            if (student.ID == id)
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

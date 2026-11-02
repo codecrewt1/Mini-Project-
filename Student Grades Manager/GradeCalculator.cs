@@ -1,31 +1,47 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Student_Grades_Manager
 {
     public class GradeCalculator
     {
-        public double CalculateAverage(int[] grades)
+        private void ValidateGrades(IReadOnlyList<int> grades)
         {
-            if (grades == null || grades.Length == 0)
-                return 0;
+            if (grades == null)
+            {
+                throw new ArgumentNullException(nameof(grades), "Grades collection cannot be null.");
+            }
 
-            int sumOfGrads = 0;
+            if (grades.Count == 0)
+            {
+                throw new ArgumentException("Grades collection cannot be empty.", nameof(grades));
+            }
+
             foreach (int grade in grades)
             {
-                sumOfGrads += grade;
+                if (grade < 0 || grade > 100)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(grades), "Each grade must be between 0 and 100.");
+                }
             }
-            double Avg = (double)sumOfGrads / grades.Length;
-            return Avg;
         }
 
-        public int GetHighestGrade(int[] grades)
+        public double CalculateAverage(IReadOnlyList<int> grades)
         {
-            if (grades == null || grades.Length == 0)
-                return 0;
+            ValidateGrades(grades);
+
+            int sum = 0;
+            foreach (int grade in grades)
+            {
+                sum += grade;
+            }
+
+            return (double)sum / grades.Count;
+        }
+
+        public int GetHighestGrade(IReadOnlyList<int> grades)
+        {
+            ValidateGrades(grades);
 
             int maxGrade = grades[0];
             foreach (int grade in grades)
@@ -35,24 +51,24 @@ namespace Student_Grades_Manager
                     maxGrade = grade;
                 }
             }
+
             return maxGrade;
         }
 
-        public int GetLowestGrade(int[] grades) 
+        public int GetLowestGrade(IReadOnlyList<int> grades)
         {
-            if (grades == null || grades.Length == 0)
-                return 0;
+            ValidateGrades(grades);
 
             int minGrade = grades[0];
-            foreach (int grade in grades) {
-                if (grade < minGrade) { 
+            foreach (int grade in grades)
+            {
+                if (grade < minGrade)
+                {
                     minGrade = grade;
                 }
-            
             }
 
             return minGrade;
-        
         }
     }
 }
